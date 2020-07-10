@@ -1,0 +1,12 @@
+Source: ros-foxy-lgsvl-bridge
+Section: misc
+Priority: optional
+Maintainer: Martins Mozeiko <martins.mozeiko@lge.com>
+Build-Depends: debhelper (>= 9.0.0), ros-foxy-ament-cmake-auto, ros-foxy-ros-workspace
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-foxy-lgsvl-bridge
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-foxy-rcl, ros-foxy-rcutils, ros-foxy-ros-workspace
+Description: LGSVL Simulator Bridge
