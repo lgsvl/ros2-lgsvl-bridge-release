@@ -37,7 +37,9 @@ tracks:
     - git-bloom-generate -y rosdebian --prefix release/:{ros_distro} :{ros_distro}
       -i :{release_inc} --os-name debian --os-not-required
     - git-bloom-generate -y rosrpm --prefix release/:{ros_distro} :{ros_distro} -i
-      :{release_inc}
+      :{release_inc} --os-name fedora
+    - git-bloom-generate -y rosrpm --prefix release/:{ros_distro} :{ros_distro} -i
+      :{release_inc} --os-name rhel
     devel_branch: eloquent-devel
     last_version: 0.1.1
     name: lgsvl-bridge
@@ -48,7 +50,7 @@ tracks:
     ros_distro: eloquent
     vcs_type: git
     vcs_uri: https://github.com/lgsvl/ros2-lgsvl-bridge.git
-    version: 0.1.1
+    version: :{ask}
   foxy:
     actions:
     - bloom-export-upstream :{vcs_local_uri} :{vcs_type} --tag :{release_tag} --display-uri
