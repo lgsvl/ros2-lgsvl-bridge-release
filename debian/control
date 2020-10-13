@@ -1,0 +1,12 @@
+Source: ros-dashing-lgsvl-bridge
+Section: misc
+Priority: optional
+Maintainer: Martins Mozeiko <martins.mozeiko@lge.com>
+Build-Depends: debhelper (>= 9.0.0), libboost-all-dev, ros-dashing-ament-cmake-auto, ros-dashing-ament-cmake-ros, ros-dashing-rcl, ros-dashing-rcutils, ros-dashing-ros-workspace
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-dashing-lgsvl-bridge
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libboost-all-dev, ros-dashing-ament-cmake-ros, ros-dashing-lgsvl-msgs, ros-dashing-nav-msgs, ros-dashing-rcl, ros-dashing-rcutils, ros-dashing-rosgraph-msgs, ros-dashing-sensor-msgs, ros-dashing-ros-workspace
+Description: LGSVL Simulator Bridge
