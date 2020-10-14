@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="2">
   <name>lgsvl_bridge</name>
-  <version>0.1.3</version>
+  <version>0.2.1</version>
   <description>LGSVL Simulator Bridge</description>
   <maintainer email="martins.mozeiko@lge.com">Martins Mozeiko</maintainer>
   <maintainer email="hadi.tabatabaee@lge.com">Hadi Tabatabaee</maintainer>
@@ -14,6 +14,11 @@
   <depend>rcl</depend>
   <depend>boost</depend>
   <depend>ament_cmake_ros</depend>
+
+  <exec_depend>lgsvl_msgs</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>rosgraph_msgs</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
 
   <export><build_type>ament_cmake</build_type></export>
 </package>
