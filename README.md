@@ -1,3 +1,26 @@
+## ros2-lgsvl-bridge (foxy) - 0.2.1-1
+
+The packages in the `ros2-lgsvl-bridge` repository were released into the `foxy` distro by running `/usr/bin/bloom-release --rosdistro foxy ros2-lgsvl-bridge --edit` on `Wed, 14 Oct 2020 00:03:35 -0000`
+
+The `lgsvl_bridge` package was released.
+
+Version of package(s) in repository `ros2-lgsvl-bridge`:
+
+- upstream repository: https://github.com/lgsvl/ros2-lgsvl-bridge.git
+- release repository: https://github.com/lgsvl/ros2-lgsvl-bridge-release.git
+- rosdistro version: `0.1.3-1`
+- old version: `0.1.3-1`
+- new version: `0.2.1-1`
+
+Versions of tools used:
+
+- bloom version: `0.10.0`
+- catkin_pkg version: `0.4.23`
+- rosdep version: `0.19.0`
+- rosdistro version: `0.8.3`
+- vcstools version: `0.1.42`
+
+
 ## ros2-lgsvl-bridge (eloquent) - 0.2.0-1
 
 The packages in the `ros2-lgsvl-bridge` repository were released into the `eloquent` distro by running `/usr/bin/bloom-release --rosdistro eloquent ros2-lgsvl-bridge --edit` on `Tue, 13 Oct 2020 22:29:41 -0000`
