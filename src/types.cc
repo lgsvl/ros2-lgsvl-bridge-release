@@ -11,8 +11,8 @@
 #include <cassert>
 #include <cstring>
 
-#include <rosidl_runtime_c/string_functions.h>
-#include <rosidl_runtime_c/primitives_sequence_functions.h>
+#include <rosidl_generator_c/string_functions.h>
+#include <rosidl_generator_c/primitives_sequence_functions.h>
 
 #include <rosidl_typesupport_introspection_c/field_types.h>
 #include <rosidl_typesupport_introspection_c/message_introspection.h>
@@ -114,7 +114,7 @@ const MessageType* MessageTypes::get(const std::string& type)
         return NULL;
     }
     // }
-
+    
     LOG("Loaded type support for " << type << " type");
 
     MessageType mtype;
@@ -204,7 +204,7 @@ static_assert(sizeof(bool) == 1);
     uint32_t length;                                                             \
     UNS_SIMPLE(uint32_t, &length);                                               \
     UNS_CHECK_SIZE(length);                                                      \
-    if (!rosidl_runtime_c__String__assignn(str, (char*)&data[offset], length)) \
+    if (!rosidl_generator_c__String__assignn(str, (char*)&data[offset], length)) \
     {                                                                            \
         ERROR("Failed to assign string for " << member->name_);                  \
         return false;                                                            \
@@ -223,10 +223,10 @@ static_assert(sizeof(bool) == 1);
     {                                                                                                                 \
         size_t byte_count = count * sizeof(type);                                                                     \
         UNS_CHECK_SIZE(byte_count);                                                                                   \
-        if (member->array_size_ == 0)                                                                                 \
+        if (member->array_size_ == 0 || member->is_upper_bound_)                                                                                 \
         {                                                                                                             \
-            auto arr = (rosidl_runtime_c__##idtype##__Sequence*)ptr;                                                \
-            if (!rosidl_runtime_c__##idtype##__Sequence__init(arr, count))                                          \
+            auto arr = (rosidl_generator_c__##idtype##__Sequence*)ptr;                                                \
+            if (!rosidl_generator_c__##idtype##__Sequence__init(arr, count))                                          \
             {                                                                                                         \
                 ERROR("Failed to allocate primitive array for " << member->name_ << " for " << count << " elements"); \
                 return false;                                                                                         \
@@ -268,15 +268,7 @@ struct Reader
             {
                 uint32_t count;
                 UNS_SIMPLE(uint32_t, &count);
-                if (member->array_size_ != 0)
-                {
-                    // constant size array
-                    if (count != 0 && count != member->array_size_)
-                    {
-                        ERROR("Incorrect array " << member->name_ << " element count, expected = " << member->array_size_ << ", got = " << count);
-                        return false;
-                    }
-                }
+                // count != member->array_size_ for the case of upper-bounded sequences
 
                 switch (member->type_id_)
                 {
@@ -294,12 +286,12 @@ struct Reader
 
                 case rosidl_typesupport_introspection_c__ROS_TYPE_STRING:
                 {
-                    rosidl_runtime_c__String* strings;
+                    rosidl_generator_c__String* strings;
                     if (member->array_size_ == 0)
                     {
                         // dynamic size array
-                        auto stringseq = (rosidl_runtime_c__String__Sequence*)ptr;
-                        if (!rosidl_runtime_c__String__Sequence__init(stringseq, count))
+                        auto stringseq = (rosidl_generator_c__String__Sequence*)ptr;
+                        if (!rosidl_generator_c__String__Sequence__init(stringseq, count))
                         {
                             ERROR("Failed to allocate string array for " << member->name_ << " for " << count << " elements");
                             return false;
@@ -308,7 +300,7 @@ struct Reader
                     }
                     else // constant size array
                     {
-                        strings = (rosidl_runtime_c__String*)ptr;
+                        strings = (rosidl_generator_c__String*)ptr;
                     }
 
                     for (uint32_t i=0; i<count; i++)
@@ -321,7 +313,7 @@ struct Reader
                 case rosidl_typesupport_introspection_c__ROS_TYPE_MESSAGE:
                 {
                     void* arr;
-                    if (member->array_size_ == 0)
+                    if (member->array_size_ == 0 || member->is_upper_bound_)
                     {
                         // dynamic size array
                         assert(member->resize_function);
@@ -377,7 +369,7 @@ struct Reader
 
                 case rosidl_typesupport_introspection_c__ROS_TYPE_STRING:
                 {
-                    auto str = (rosidl_runtime_c__String*)ptr;
+                    auto str = (rosidl_generator_c__String*)ptr;
                     UNS_STRING(str);
                     break;
                 }
@@ -429,7 +421,7 @@ bool Unserialize(void* msg, const rosidl_message_type_support_t* type, const std
 
 #define SER_STRING(ptr)                                         \
     {                                                           \
-        auto str = (rosidl_runtime_c__String*)ptr;            \
+        auto str = (rosidl_generator_c__String*)ptr;            \
         uint32_t length = (uint32_t)str->size;                  \
         SER_SIMPLE(uint32_t, &length);                          \
         data.insert(data.end(), str->data, str->data + length); \
@@ -449,7 +441,7 @@ bool Unserialize(void* msg, const rosidl_message_type_support_t* type, const std
         void* arrdata;                                                              \
         if (member->array_size_ == 0)                                               \
         {                                                                           \
-            auto arr = (rosidl_runtime_c__##idtype##__Sequence*)ptr;              \
+            auto arr = (rosidl_generator_c__##idtype##__Sequence*)ptr;              \
             arrcount = (uint32_t)arr->size;                                         \
             arrdata = arr->data;                                                    \
         }                                                                           \
@@ -491,18 +483,18 @@ void Serialize(void* msg, const rosidl_message_type_support_t* type, std::vector
 
             case rosidl_typesupport_introspection_c__ROS_TYPE_STRING:
             {
-                const rosidl_runtime_c__String* strings;
+                const rosidl_generator_c__String* strings;
                 uint32_t count;
                 if (member->array_size_ == 0)
                 {
                     // dynamic size array
-                    auto stringseq = (rosidl_runtime_c__String__Sequence*)ptr;
+                    auto stringseq = (rosidl_generator_c__String__Sequence*)ptr;
                     strings = stringseq->data;
                     count = (uint32_t)stringseq->size;
                 }
                 else // constant size array
                 {
-                    strings = (rosidl_runtime_c__String*)ptr;
+                    strings = (rosidl_generator_c__String*)ptr;
                     count = (uint32_t)member->array_size_;
                 }
                 SER_SIMPLE(uint32_t, &count);
